@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock.photo",
+  "version": "1.0.0",
+  "requirements": { "org.dcam.stock": "^1.0.0" },
+  "nodes": [
+    { "id": "stock", "type": "org.dcam.stock.photo", "parameters": {} }
+  ],
+  "edges": [],
+  "zslDepth": 3
+}

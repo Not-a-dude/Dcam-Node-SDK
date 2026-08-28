@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock",
+  "version": "1.0.0",
+  "nodeAbi": { "major": 1, "minor": 0 },
+  "library": "libdcam_node_stock.so",
+  "nodeTypes": [
+    {
+      "id": "org.dcam.stock.photo",
+      "parameters": { "type": "object", "additionalProperties": false },
+      "inputs": [
+        { "id": "frame", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] },
+        { "id": "metadata", "type": "metadata" },
+        { "id": "request", "type": "requestState" },
+        { "id": "output", "type": "outputFd" }
+      ],
+      "outputs": [
+        { "id": "preview", "type": "surface" },
+        { "id": "photo", "type": "encodedPacket", "formats": ["JPEG", "HEIC"] }
+      ]
+    }
+  ]
+}

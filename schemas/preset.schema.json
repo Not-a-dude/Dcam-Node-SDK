@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dcam.org/schemas/preset-v1.json",
+  "title": "Dcam graph preset",
+  "type": "object",
+  "required": ["schemaVersion", "id", "version", "requirements", "nodes", "edges", "zslDepth"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string" },
+    "version": { "type": "string" },
+    "requirements": { "type": "object", "additionalProperties": { "type": "string" } },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "parameters"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "parameters": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "zslDepth": { "type": "integer", "minimum": 0, "maximum": 16 }
+  },
+  "additionalProperties": false
+}

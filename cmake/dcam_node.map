@@ -1,0 +1,6 @@
+DCAM_NODE_1.0 {
+    global:
+        dcam_node_get_api;
+    local:
+        *;
+};
