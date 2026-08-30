@@ -3,7 +3,7 @@
   "$id": "https://dcam.org/schemas/preset-v1.json",
   "title": "Dcam graph preset",
   "type": "object",
-  "required": ["schemaVersion", "id", "version", "requirements", "nodes", "edges", "zslDepth"],
+  "required": ["schemaVersion", "id", "version", "requirements", "nodes", "edges", "zsl"],
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "type": "string" },
@@ -34,7 +34,14 @@
         "additionalProperties": false
       }
     },
-    "zslDepth": { "type": "integer", "minimum": 0, "maximum": 16 }
+    "zsl": {
+      "type": "object",
+      "required": ["depth"],
+      "properties": {
+        "depth": { "type": "integer", "minimum": 0, "maximum": 16 }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

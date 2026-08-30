@@ -3,17 +3,21 @@ package com.dcam.node;
 import android.os.ParcelFileDescriptor;
 import android.view.Surface;
 import com.dcam.node.CaptureEvent;
+import com.dcam.node.DependencyParcel;
 import com.dcam.node.FrameParcel;
 import com.dcam.node.IDcamNodeHost;
 import com.dcam.node.OutputTargetParcel;
 import com.dcam.node.RequestStateResult;
+import com.dcam.node.RuntimeInfo;
 import com.dcam.node.SessionConfigParcel;
 import com.dcam.node.SessionOpenResult;
 
 interface IDcamNodeRuntime {
+    RuntimeInfo getRuntimeInfo();
     SessionOpenResult openSession(
         in SessionConfigParcel config,
         in ParcelFileDescriptor nodeLibrary,
+        in DependencyParcel[] dependencies,
         IDcamNodeHost host
     );
     int setPreviewSurface(long sessionId, in Surface surface);

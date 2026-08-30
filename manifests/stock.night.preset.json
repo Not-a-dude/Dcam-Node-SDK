@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "org.dcam.stock.photo",
+  "id": "org.dcam.stock.night",
   "version": "1.0.0",
   "requirements": { "org.dcam.stock": "^1.0.0" },
   "nodes": [

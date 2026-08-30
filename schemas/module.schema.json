@@ -1,24 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dcam.org/schemas/node-module-v1.json",
-  "title": "Dcam node module",
+  "title": "Dcam node module package manifest",
   "type": "object",
-  "required": ["schemaVersion", "id", "version", "nodeAbi", "library", "nodeTypes"],
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "publisherKey",
+    "nodeAbi",
+    "library",
+    "nodeTypes"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "id": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$" },
-    "version": { "type": "string" },
+    "id": { "$ref": "#/$defs/id" },
+    "version": { "$ref": "#/$defs/version" },
+    "publisherKey": {
+      "type": "string",
+      "minLength": 32,
+      "description": "Base64-encoded X.509 Ed25519 public key used to verify signature.ed25519."
+    },
     "nodeAbi": {
       "type": "object",
-      "description": "ABI version used to build the node. Loaders accept the same major and a node minor not newer than their own.",
       "required": ["major", "minor"],
       "properties": {
-        "major": { "const": 1 },
+        "major": { "type": "integer", "minimum": 0 },
         "minor": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false
     },
-    "library": { "type": "string", "pattern": "^lib.+\\.so$" },
+    "library": { "$ref": "#/$defs/library" },
+    "dependencies": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9]+(\\.[a-z0-9_-]+)+$": { "$ref": "#/$defs/versionRange" }
+      },
+      "additionalProperties": false
+    },
     "nodeTypes": {
       "type": "array",
       "minItems": 1,
@@ -26,21 +45,63 @@
         "type": "object",
         "required": ["id", "parameters", "inputs", "outputs"],
         "properties": {
-          "id": { "type": "string" },
+          "id": { "$ref": "#/$defs/id" },
           "parameters": { "type": "object" },
           "inputs": { "type": "array", "items": { "$ref": "#/$defs/port" } },
           "outputs": { "type": "array", "items": { "$ref": "#/$defs/port" } }
-        }
+        },
+        "additionalProperties": false
       }
     }
   },
   "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "pattern": "^(?:\\^)?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "library": {
+      "type": "object",
+      "required": ["abi", "path", "soname", "sha256", "needed"],
+      "properties": {
+        "abi": { "const": "arm64-v8a" },
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)[^/]+(?:/[^/]+)*$"
+        },
+        "soname": { "type": "string", "pattern": "^lib.+\\.so$" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "needed": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^lib.+\\.so$" }
+        }
+      },
+      "additionalProperties": false
+    },
     "port": {
       "type": "object",
       "required": ["id", "type"],
       "properties": {
         "id": { "type": "string" },
-        "type": { "enum": ["frame", "metadata", "audio", "encodedPacket", "surface", "requestState", "outputFd"] },
+        "type": {
+          "enum": [
+            "frame",
+            "metadata",
+            "audio",
+            "encodedPacket",
+            "surface",
+            "requestState",
+            "outputFd"
+          ]
+        },
         "formats": { "type": "array", "items": { "type": "string" } }
       },
       "additionalProperties": false

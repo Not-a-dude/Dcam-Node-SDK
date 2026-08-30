@@ -7,5 +7,5 @@
     { "id": "stock", "type": "org.dcam.stock.photo", "parameters": {} }
   ],
   "edges": [],
-  "zslDepth": 3
+  "zsl": { "depth": 3 }
 }
