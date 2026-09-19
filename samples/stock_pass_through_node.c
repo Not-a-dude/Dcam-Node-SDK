@@ -1,5 +1,6 @@
 #include "dcam_node_abi.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -12,6 +13,7 @@ typedef struct StockNode {
 } StockNode;
 
 static const DcamHostApi* g_host;
+static const size_t kBaseFrameSize = offsetof(DcamFrame, parameters_json);
 
 static const DcamPortDescriptor kInputs[] = {
     {
@@ -78,7 +80,9 @@ static DcamStatus create_node(DcamStringView node_type_id,
     }
     StockNode* node = (StockNode*)calloc(1, sizeof(StockNode));
     if (node == NULL) return DCAM_ERROR_OUT_OF_MEMORY;
-    node->host = *g_host;
+    memcpy(&node->host, g_host,
+           g_host->struct_size < sizeof(node->host)
+                   ? g_host->struct_size : sizeof(node->host));
     uint32_t offset = 0;
     uint32_t checksum = 0;
     while (offset + 16 <= config.size) {
@@ -99,7 +103,7 @@ static DcamStatus configure_node(DcamNodeHandle handle, DcamStringView config) {
 static DcamStatus process_frame(DcamNodeHandle handle, const DcamFrame* frame,
                                 DcamFrameResult* out) {
     if (handle == 0 || frame == NULL || out == NULL ||
-        frame->struct_size < sizeof(DcamFrame) ||
+        frame->struct_size < kBaseFrameSize ||
         out->struct_size < sizeof(DcamFrameResult) ||
         frame->hardware_buffer == NULL) {
         return DCAM_ERROR_INVALID_ARGUMENT;
@@ -111,6 +115,7 @@ static DcamStatus process_frame(DcamNodeHandle handle, const DcamFrame* frame,
                 node->host.context,
                 DCAM_PREVIEW_SURFACE,
                 frame->hardware_buffer,
+                &frame->buffer_desc,
                 frame->acquire_fence_fd);
         if (present != DCAM_OK) return present;
     }
@@ -162,8 +167,11 @@ static void destroy_node(DcamNodeHandle handle) {
 DCAM_NODE_EXPORT DcamStatus dcam_node_get_api(uint32_t requested_abi_major,
                                                const DcamHostApi* host_api,
                                                DcamNodeApi* out_api) {
+    const size_t required_host_size =
+            offsetof(DcamHostApi, complete_output) + sizeof(host_api->complete_output);
     if (requested_abi_major != DCAM_NODE_ABI_MAJOR || host_api == NULL ||
         host_api->abi_major != DCAM_NODE_ABI_MAJOR || out_api == NULL ||
+        host_api->struct_size < required_host_size ||
         out_api->struct_size < sizeof(DcamNodeApi)) {
         return DCAM_ERROR_ABI_MISMATCH;
     }

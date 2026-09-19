@@ -13,11 +13,9 @@ import com.dcam.node.SessionConfigParcel;
 import com.dcam.node.SessionOpenResult;
 
 interface IDcamNodeRuntime {
-    RuntimeInfo getRuntimeInfo();
     SessionOpenResult openSession(
         in SessionConfigParcel config,
         in ParcelFileDescriptor nodeLibrary,
-        in DependencyParcel[] dependencies,
         IDcamNodeHost host
     );
     int setPreviewSurface(long sessionId, in Surface surface);
@@ -30,4 +28,11 @@ interface IDcamNodeRuntime {
     oneway void evictZslFrame(long sessionId, long frameId);
     void flushSession(long sessionId);
     void closeSession(long sessionId);
+    RuntimeInfo getRuntimeInfo();
+    SessionOpenResult openSessionWithDependencies(
+        in SessionConfigParcel config,
+        in ParcelFileDescriptor nodeLibrary,
+        in DependencyParcel[] dependencies,
+        IDcamNodeHost host
+    );
 }

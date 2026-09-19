@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock.dng",
+  "parameters": { "type": "object", "additionalProperties": false },
+  "inputs": [
+    { "id": "raw", "type": "frame", "formats": ["RAW_SENSOR"] },
+    { "id": "metadata", "type": "metadata" },
+    { "id": "request", "type": "requestState" },
+    { "id": "parameters", "type": "parameters" }
+  ],
+  "outputs": []
+}

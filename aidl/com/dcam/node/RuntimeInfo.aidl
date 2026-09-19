@@ -1,7 +1,7 @@
 package com.dcam.node;
 
 parcelable RuntimeInfo {
-    int runtimeAbi = 2;
+    int runtimeAbi = 1;
     int pid = 0;
     int uid = 0;
     boolean isolated = false;

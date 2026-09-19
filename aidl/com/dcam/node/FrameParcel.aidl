@@ -23,4 +23,5 @@ parcelable FrameParcel {
     @nullable HardwareBuffer hardwareBuffer;
     @nullable ParcelFileDescriptor acquireFence;
     @nullable MetadataParcel metadata;
+    String parametersJson = "{}";
 }

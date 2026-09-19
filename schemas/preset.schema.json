@@ -3,42 +3,144 @@
   "$id": "https://dcam.org/schemas/preset-v1.json",
   "title": "Dcam graph preset",
   "type": "object",
-  "required": ["schemaVersion", "id", "version", "requirements", "nodes", "edges", "zsl"],
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "requirements",
+    "parameters",
+    "nodes",
+    "edges",
+    "zsl"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "id": { "type": "string" },
-    "version": { "type": "string" },
-    "requirements": { "type": "object", "additionalProperties": { "type": "string" } },
+    "id": { "$ref": "#/$defs/id" },
+    "version": { "$ref": "#/$defs/version" },
+    "requirements": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-z0-9]+(\\.[a-z0-9_-]+)+$": { "$ref": "#/$defs/versionRange" }
+      },
+      "additionalProperties": false
+    },
+    "parameters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/presetParameter" }
+    },
     "nodes": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "type", "parameters"],
-        "properties": {
-          "id": { "type": "string" },
-          "type": { "type": "string" },
-          "parameters": { "type": "object" }
-        },
-        "additionalProperties": false
-      }
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nodeInstance" }
     },
     "edges": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["from", "to"],
-        "properties": {
-          "from": { "type": "string" },
-          "to": { "type": "string" }
-        },
-        "additionalProperties": false
-      }
+      "items": { "$ref": "#/$defs/edge" }
     },
     "zsl": {
       "type": "object",
       "required": ["depth"],
       "properties": {
         "depth": { "type": "integer", "minimum": 0, "maximum": 16 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"
+    },
+    "localId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$"
+    },
+    "versionRange": {
+      "type": "string",
+      "pattern": "^(?:\\^)?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$"
+    },
+    "presetParameter": {
+      "type": "object",
+      "required": ["id", "type", "default", "ui"],
+      "properties": {
+        "id": { "$ref": "#/$defs/localId" },
+        "type": { "enum": ["boolean", "integer", "number", "string"] },
+        "default": {},
+        "enum": { "type": "array", "minItems": 1, "uniqueItems": true },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "ui": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["Pro", "Dev", "Settings"] }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "boolean" } } },
+          "then": {
+            "properties": {
+              "default": { "type": "boolean" },
+              "enum": { "items": { "type": "boolean" } }
+            },
+            "not": { "anyOf": [{ "required": ["minimum"] }, { "required": ["maximum"] }] }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "integer" } } },
+          "then": {
+            "properties": {
+              "default": { "type": "integer" },
+              "enum": { "items": { "type": "integer" } },
+              "minimum": { "type": "integer" },
+              "maximum": { "type": "integer" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "number" } } },
+          "then": {
+            "properties": {
+              "default": { "type": "number" },
+              "enum": { "items": { "type": "number" } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "string" } } },
+          "then": {
+            "properties": {
+              "default": { "type": "string" },
+              "enum": { "items": { "type": "string" } }
+            },
+            "not": { "anyOf": [{ "required": ["minimum"] }, { "required": ["maximum"] }] }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "nodeInstance": {
+      "type": "object",
+      "required": ["id", "type", "parameters"],
+      "properties": {
+        "id": { "$ref": "#/$defs/localId" },
+        "type": { "$ref": "#/$defs/id" },
+        "parameters": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*\\.[a-z][a-z0-9_-]*$" },
+        "to": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*\\.[a-z][a-z0-9_-]*$" }
       },
       "additionalProperties": false
     }

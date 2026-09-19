@@ -59,6 +59,7 @@ typedef enum DcamPortType {
     DCAM_PORT_SURFACE = 5,
     DCAM_PORT_REQUEST_STATE = 6,
     DCAM_PORT_OUTPUT_FD = 7,
+    DCAM_PORT_PARAMETERS = 8,
 } DcamPortType;
 
 typedef enum DcamWireType {
@@ -172,6 +173,11 @@ typedef struct DcamFrame {
     uint64_t request_revision;
     const DcamMetadata* metadata;
     uint64_t reserved[5];
+    /* UTF-8 JSON object containing the parameter snapshot for this frame. */
+    DcamStringView parameters_json;
+    /* 0 for a camera-source frame, otherwise the receiving node input port. */
+    uint32_t input_port_id;
+    uint32_t reserved1;
 } DcamFrame;
 
 /* release_fence_fd ownership transfers from the node to the host. */
@@ -269,8 +275,10 @@ typedef struct DcamHostApi {
     DcamStatus (*allocate_buffer)(void* context, const DcamBufferDesc* desc,
                                   DcamBufferHandle* out_handle,
                                   AHardwareBuffer** out_buffer);
+    /* buffer_desc describes the presented buffer's format and color space. */
     DcamStatus (*present_buffer)(void* context, DcamSurfaceHandle surface,
                                  AHardwareBuffer* buffer,
+                                 const DcamBufferDesc* buffer_desc,
                                  int32_t acquire_fence_fd);
     DcamStatus (*submit_request_state)(
             void* context, const DcamRequestStateTransaction* transaction);
@@ -284,6 +292,33 @@ typedef struct DcamHostApi {
                                   DcamStringView mime_type, uint64_t size,
                                   DcamStatus status);
     uint64_t reserved[7];
+
+    /*
+     * Opens an app-owned artifact file. The suggested name is advisory and the
+     * host may sanitize or replace it. Nodes receive only a writable FD, never
+     * a filesystem path. Artifact contents are intentionally opaque to Dcam.
+     * Nodes must check struct_size and the function pointer before use.
+     */
+    DcamStatus (*open_artifact)(void* context, uint64_t capture_id,
+                                DcamStringView suggested_name,
+                                DcamStringView mime_type,
+                                uint64_t maximum_bytes,
+                                uint64_t* out_artifact_id,
+                                int32_t* out_fd);
+    DcamStatus (*complete_artifact)(void* context, uint64_t artifact_id,
+                                    uint64_t size, DcamStatus status);
+    /*
+     * Routes a frame from source_node/output_port_id through the preset graph.
+     * The frame and its nested data are borrowed until this call returns.
+     * acquire_fence_fd ownership always transfers to the host.
+     */
+    DcamStatus (*emit_frame)(void* context, DcamNodeHandle source_node,
+                             uint32_t output_port_id, const DcamFrame* frame);
+    /* Releases only the ZSL hold created by source_node for frame_id. */
+    DcamStatus (*release_zsl_frame_for_node)(void* context,
+                                             DcamNodeHandle source_node,
+                                             uint64_t frame_id,
+                                             int32_t release_fence_fd);
 } DcamHostApi;
 
 typedef struct DcamNodeApi {

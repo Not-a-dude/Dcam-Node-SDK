@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock.photo",
+  "parameters": { "type": "object", "additionalProperties": false },
+  "inputs": [
+    { "id": "frame", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] },
+    { "id": "metadata", "type": "metadata" },
+    { "id": "request", "type": "requestState" },
+    { "id": "output", "type": "outputFd" },
+    { "id": "parameters", "type": "parameters" }
+  ],
+  "outputs": [
+    { "id": "preview", "type": "surface" },
+    { "id": "out", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] },
+    { "id": "raw", "type": "frame", "formats": ["RAW_SENSOR"] },
+    { "id": "preview_frame", "type": "frame", "formats": ["YUV_420_888"] }
+  ]
+}

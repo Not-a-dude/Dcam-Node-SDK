@@ -10,7 +10,7 @@
     "publisherKey",
     "nodeAbi",
     "library",
-    "nodeTypes"
+    "nodeFiles"
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
@@ -19,14 +19,15 @@
     "publisherKey": {
       "type": "string",
       "minLength": 32,
+      "pattern": "^[A-Za-z0-9+/]+={0,2}$",
       "description": "Base64-encoded X.509 Ed25519 public key used to verify signature.ed25519."
     },
     "nodeAbi": {
       "type": "object",
       "required": ["major", "minor"],
       "properties": {
-        "major": { "type": "integer", "minimum": 0 },
-        "minor": { "type": "integer", "minimum": 0 }
+        "major": { "const": 1 },
+        "minor": { "const": 0 }
       },
       "additionalProperties": false
     },
@@ -38,20 +39,10 @@
       },
       "additionalProperties": false
     },
-    "nodeTypes": {
+    "nodeFiles": {
       "type": "array",
       "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["id", "parameters", "inputs", "outputs"],
-        "properties": {
-          "id": { "$ref": "#/$defs/id" },
-          "parameters": { "type": "object" },
-          "inputs": { "type": "array", "items": { "$ref": "#/$defs/port" } },
-          "outputs": { "type": "array", "items": { "$ref": "#/$defs/port" } }
-        },
-        "additionalProperties": false
-      }
+      "items": { "$ref": "#/$defs/nodeFile" }
     }
   },
   "$defs": {
@@ -61,11 +52,19 @@
     },
     "version": {
       "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$"
     },
     "versionRange": {
       "type": "string",
-      "pattern": "^(?:\\^)?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+      "pattern": "^(?:\\^)?[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
     },
     "library": {
       "type": "object",
@@ -73,36 +72,32 @@
       "properties": {
         "abi": { "const": "arm64-v8a" },
         "path": {
-          "type": "string",
-          "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)[^/]+(?:/[^/]+)*$"
+          "allOf": [
+            { "$ref": "#/$defs/path" },
+            { "pattern": "^lib/arm64-v8a/lib[A-Za-z0-9_.+-]+\\.so$" }
+          ]
         },
-        "soname": { "type": "string", "pattern": "^lib.+\\.so$" },
-        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "soname": { "type": "string", "pattern": "^lib[A-Za-z0-9_.+-]+\\.so$" },
+        "sha256": { "$ref": "#/$defs/hash" },
         "needed": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^lib.+\\.so$" }
+          "items": { "type": "string", "pattern": "^lib[A-Za-z0-9_.+-]+\\.so$" }
         }
       },
       "additionalProperties": false
     },
-    "port": {
+    "nodeFile": {
       "type": "object",
-      "required": ["id", "type"],
+      "required": ["path", "sha256"],
       "properties": {
-        "id": { "type": "string" },
-        "type": {
-          "enum": [
-            "frame",
-            "metadata",
-            "audio",
-            "encodedPacket",
-            "surface",
-            "requestState",
-            "outputFd"
+        "path": {
+          "allOf": [
+            { "$ref": "#/$defs/path" },
+            { "pattern": "^nodes/.+\\.node\\.json$" }
           ]
         },
-        "formats": { "type": "array", "items": { "type": "string" } }
+        "sha256": { "$ref": "#/$defs/hash" }
       },
       "additionalProperties": false
     }

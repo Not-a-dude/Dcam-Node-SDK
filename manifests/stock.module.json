@@ -22,20 +22,20 @@
   "dependencies": {
     "org.dcam.stock.libheif": "^1.23.1"
   },
-  "nodeTypes": [
-    {
-      "id": "org.dcam.stock.photo",
-      "parameters": { "type": "object", "additionalProperties": false },
-      "inputs": [
-        { "id": "frame", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] },
-        { "id": "metadata", "type": "metadata" },
-        { "id": "request", "type": "requestState" },
-        { "id": "output", "type": "outputFd" }
-      ],
-      "outputs": [
-        { "id": "preview", "type": "surface" },
-        { "id": "photo", "type": "encodedPacket", "formats": ["JPEG", "HEIC"] }
-      ]
-    }
+  "nodeFiles": [
+    { "path": "nodes/stock.color_matrix.node.json", "sha256": "e2980538dc6bbf3e6cac27d8686bc05c8f529d224def71dc072b5762379b50ae" },
+    { "path": "nodes/stock.crop_zoom.node.json", "sha256": "0ceb4050fe4b9f65e3906ae530aa7ce8482ce1fd84a41737c7505ea74a743ad0" },
+    { "path": "nodes/stock.demosaic.node.json", "sha256": "1946e214032d27bc2ee474b3f9b914f0984a8af293a8a66b36d43d1746db2c85" },
+    { "path": "nodes/stock.dng.node.json", "sha256": "7cd3acda0624acff185e48441e1b87cdf56826c1340a456a56f727ea888dc389" },
+    { "path": "nodes/stock.heic.node.json", "sha256": "2ae74cf3607dc75aa1af906d437dc757e76905b87ccf7a602d3f0ac3f36bf6f3" },
+    { "path": "nodes/stock.input.node.json", "sha256": "60cb22202ca0e7c5db8ec5903a68bf0a0f275ddba9166c5ac13dd191f0de3a07" },
+    { "path": "nodes/stock.jpeg.node.json", "sha256": "68b354e87684604547be62b7a47787035651b5a652412f579c6303e65b9a9741" },
+    { "path": "nodes/stock.lens_shading.node.json", "sha256": "bbd1ab8c9852a1c0d9c2448bf0c40f92c4f0d4398c828329c6f957a261fd81a0" },
+    { "path": "nodes/stock.linearize.node.json", "sha256": "a565dc7c519148901fc1ffb605842ca3b3ea42c62a5be168ec66300b8df6ee0d" },
+    { "path": "nodes/stock.photo.node.json", "sha256": "d1618cd1286e821baab34237f59382169dad0d75f98a7a00ae0e785cccc438d6" },
+    { "path": "nodes/stock.preview.node.json", "sha256": "db5472fb309fc3b177dbfa7083822089e57212eb8e28c80102f0e1275d966b9f" },
+    { "path": "nodes/stock.rotate.node.json", "sha256": "b21fbaf518cb4d3462a1a12e3bb643780aeef2ebb8d5278ab1037a6aab0c9292" },
+    { "path": "nodes/stock.tonemap.node.json", "sha256": "92cc8f4b6beb2543709cd754bafaa0497baca06220aef489af7ea871c9c43bab" },
+    { "path": "nodes/stock.white_balance.node.json", "sha256": "ac4936dec2e2a4109b71980d74f4bcb1bed5462092e73cdd07798e88aa0f0cee" }
   ]
 }

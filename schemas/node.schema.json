@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dcam.org/schemas/node-v1.json",
+  "title": "Dcam node definition",
+  "type": "object",
+  "required": ["schemaVersion", "id", "parameters", "inputs", "outputs"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "$ref": "#/$defs/id" },
+    "parameters": { "$ref": "#/$defs/parameterObject" },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/port" }
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/port" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(\\.[a-z0-9_-]+)+$"
+    },
+    "localId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "parameterObject": {
+      "type": "object",
+      "required": ["type", "additionalProperties"],
+      "properties": {
+        "type": { "const": "object" },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/parameterValue" }
+        },
+        "required": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/localId" }
+        },
+        "additionalProperties": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "parameterValue": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["boolean", "integer", "number", "string"] },
+        "enum": { "type": "array", "minItems": 1, "uniqueItems": true },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "boolean" } } },
+          "then": {
+            "properties": { "enum": { "items": { "type": "boolean" } } },
+            "not": { "anyOf": [{ "required": ["minimum"] }, { "required": ["maximum"] }] }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "integer" } } },
+          "then": {
+            "properties": {
+              "enum": { "items": { "type": "integer" } },
+              "minimum": { "type": "integer" },
+              "maximum": { "type": "integer" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "number" } } },
+          "then": { "properties": { "enum": { "items": { "type": "number" } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "string" } } },
+          "then": {
+            "properties": { "enum": { "items": { "type": "string" } } },
+            "not": { "anyOf": [{ "required": ["minimum"] }, { "required": ["maximum"] }] }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "port": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/localId" },
+        "type": {
+          "enum": [
+            "frame",
+            "metadata",
+            "audio",
+            "encodedPacket",
+            "surface",
+            "requestState",
+            "outputFd",
+            "parameters"
+          ]
+        },
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_.+/-]*$" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": { "enum": ["frame", "audio", "encodedPacket"] }
+            }
+          },
+          "then": { "required": ["formats"] },
+          "else": { "not": { "required": ["formats"] } }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

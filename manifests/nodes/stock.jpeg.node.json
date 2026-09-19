@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock.jpeg",
+  "parameters": { "type": "object", "additionalProperties": false },
+  "inputs": [
+    { "id": "in", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] },
+    { "id": "metadata", "type": "metadata" },
+    { "id": "request", "type": "requestState" },
+    { "id": "output", "type": "outputFd" },
+    { "id": "parameters", "type": "parameters" }
+  ],
+  "outputs": []
+}

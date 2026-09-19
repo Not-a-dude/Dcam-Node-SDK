@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "org.dcam.stock.preview",
+  "parameters": { "type": "object", "additionalProperties": false },
+  "inputs": [
+    { "id": "in", "type": "frame", "formats": ["YUV_420_888", "RAW_SENSOR"] }
+  ],
+  "outputs": [
+    { "id": "preview", "type": "surface" }
+  ]
+}
