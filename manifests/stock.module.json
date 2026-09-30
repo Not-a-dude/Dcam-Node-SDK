@@ -25,7 +25,7 @@
   "nodeFiles": [
     {
       "path": "nodes/stock.buffersaver.node.json",
-      "sha256": "a1e9f3d1e7013862db5fcd25f051a77a1df80b29b0ac140a1bdcada65709bc15"
+      "sha256": "31262ce87feb86a350a1be01768d3be7329a37fe0a4066e2ab12c4715bfef1f3"
     },
     { "path": "nodes/stock.color_matrix.node.json", "sha256": "e2980538dc6bbf3e6cac27d8686bc05c8f529d224def71dc072b5762379b50ae" },
     { "path": "nodes/stock.crop_zoom.node.json", "sha256": "0ceb4050fe4b9f65e3906ae530aa7ce8482ce1fd84a41737c7505ea74a743ad0" },
@@ -34,7 +34,7 @@
     { "path": "nodes/stock.heic.node.json", "sha256": "2ae74cf3607dc75aa1af906d437dc757e76905b87ccf7a602d3f0ac3f36bf6f3" },
     {
       "path": "nodes/stock.init.node.json",
-      "sha256": "80549af40797222fca89e73e91bf2c1ac5cea75afcb92735e434f3cd92207fba"
+      "sha256": "5ed8ca3a6f9fd951346cd99fdcfb8057d0278360e332084be179ae027ea84715"
     },
     { "path": "nodes/stock.input.node.json", "sha256": "60cb22202ca0e7c5db8ec5903a68bf0a0f275ddba9166c5ac13dd191f0de3a07" },
     { "path": "nodes/stock.jpeg.node.json", "sha256": "68b354e87684604547be62b7a47787035651b5a652412f579c6303e65b9a9741" },
