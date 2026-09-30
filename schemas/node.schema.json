@@ -25,7 +25,7 @@
     },
     "localId": {
       "type": "string",
-      "pattern": "^[a-z][a-z0-9_-]*$"
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
     },
     "parameterObject": {
       "type": "object",
@@ -52,7 +52,10 @@
         "type": { "enum": ["boolean", "integer", "number", "string"] },
         "enum": { "type": "array", "minItems": 1, "uniqueItems": true },
         "minimum": { "type": "number" },
-        "maximum": { "type": "number" }
+        "maximum": {
+          "type": "number"
+        },
+        "default": {}
       },
       "allOf": [
         {
