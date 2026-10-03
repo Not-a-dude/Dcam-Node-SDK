@@ -2,7 +2,7 @@ package com.dcam.node;
 
 parcelable SessionConfigParcel {
     long requestedSessionId = 0;
-    int clientAbi = 1;
+    int clientAbi = 2;
     String nodeTypeId = "";
     String instanceId = "";
     String configJson = "{}";
