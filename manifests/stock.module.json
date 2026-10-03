@@ -42,7 +42,6 @@
     { "path": "nodes/stock.linearize.node.json", "sha256": "a565dc7c519148901fc1ffb605842ca3b3ea42c62a5be168ec66300b8df6ee0d" },
     { "path": "nodes/stock.photo.node.json", "sha256": "d1618cd1286e821baab34237f59382169dad0d75f98a7a00ae0e785cccc438d6" },
     { "path": "nodes/stock.preview.node.json", "sha256": "db5472fb309fc3b177dbfa7083822089e57212eb8e28c80102f0e1275d966b9f" },
-    { "path": "nodes/stock.rotate.node.json", "sha256": "b21fbaf518cb4d3462a1a12e3bb643780aeef2ebb8d5278ab1037a6aab0c9292" },
     { "path": "nodes/stock.tonemap.node.json", "sha256": "92cc8f4b6beb2543709cd754bafaa0497baca06220aef489af7ea871c9c43bab" },
     { "path": "nodes/stock.white_balance.node.json", "sha256": "ac4936dec2e2a4109b71980d74f4bcb1bed5462092e73cdd07798e88aa0f0cee" }
   ]
