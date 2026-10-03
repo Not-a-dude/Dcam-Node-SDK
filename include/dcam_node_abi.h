@@ -291,7 +291,10 @@ typedef struct DcamHostApi {
     DcamStatus (*complete_output)(void* context, uint64_t capture_id,
                                   DcamStringView mime_type, uint64_t size,
                                   DcamStatus status);
-    uint64_t reserved[7];
+    DcamStatus (*request_burst_capture)(void* context, uint32_t source,
+                                        uint64_t zsl_frame_id,
+                                        uint32_t frame_count);
+    uint64_t reserved[6];
 
     /*
      * Opens an app-owned artifact file. The suggested name is advisory and the
