@@ -8,7 +8,6 @@ parcelable SessionConfigParcel {
     String configJson = "{}";
     int requestedZslDepth = 0;
     boolean rendersPreview = false;
-    int runtimeAbi = 1;
     String presetJson = "{}";
     String streamCatalogJson = "{}";
     String requestKeyCatalogJson = "{}";

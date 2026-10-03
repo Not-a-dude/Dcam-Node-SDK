@@ -8,5 +8,4 @@ parcelable SessionOpenResult {
     String moduleVersion = "";
     String nodeTypeId = "";
     String message = "";
-    int runtimeAbi = 1;
 }
