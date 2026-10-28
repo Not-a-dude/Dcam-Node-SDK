@@ -127,7 +127,6 @@ typedef struct DcamBufferDesc {
     uint32_t format;
     uint64_t usage;
     int32_t data_space;
-    uint32_t reserved[7];
 } DcamBufferDesc;
 
 typedef struct DcamMetadataEntry {
@@ -138,7 +137,6 @@ typedef struct DcamMetadataEntry {
     uint32_t flags;
     DcamStringView name;
     DcamBytesView value;
-    uint64_t reserved[4];
 } DcamMetadataEntry;
 
 typedef struct DcamMetadata {
@@ -146,7 +144,6 @@ typedef struct DcamMetadata {
     uint32_t wire_version;
     uint32_t entry_count;
     const DcamMetadataEntry* entries;
-    uint64_t reserved[5];
 } DcamMetadata;
 
 /*
@@ -169,15 +166,12 @@ typedef struct DcamFrame {
     int32_t crop_right;
     int32_t crop_bottom;
     int32_t acquire_fence_fd;
-    uint32_t reserved0;
     uint64_t request_revision;
     const DcamMetadata* metadata;
-    uint64_t reserved[5];
     /* UTF-8 JSON object containing the parameter snapshot for this frame. */
     DcamStringView parameters_json;
     /* 0 for a camera-source frame, otherwise the receiving node input port. */
     uint32_t input_port_id;
-    uint32_t reserved1;
 } DcamFrame;
 
 /* release_fence_fd ownership transfers from the node to the host. */
@@ -186,7 +180,6 @@ typedef struct DcamFrameResult {
     int32_t disposition;
     int32_t release_fence_fd;
     uint32_t flags;
-    uint64_t reserved[7];
 } DcamFrameResult;
 
 typedef struct DcamPortDescriptor {
@@ -196,7 +189,6 @@ typedef struct DcamPortDescriptor {
     uint32_t flags;
     DcamStringView name;
     DcamStringView schema_json;
-    uint64_t reserved[4];
 } DcamPortDescriptor;
 
 typedef struct DcamNodeDescriptor {
@@ -209,7 +201,6 @@ typedef struct DcamNodeDescriptor {
     uint32_t output_port_count;
     const DcamPortDescriptor* input_ports;
     const DcamPortDescriptor* output_ports;
-    uint64_t reserved[6];
 } DcamNodeDescriptor;
 
 typedef struct DcamRequestStateEntry {
@@ -220,7 +211,6 @@ typedef struct DcamRequestStateEntry {
     uint32_t element_count;
     DcamStringView name;
     DcamBytesView value;
-    uint64_t reserved[4];
 } DcamRequestStateEntry;
 
 typedef struct DcamRequestStateTransaction {
@@ -233,9 +223,7 @@ typedef struct DcamRequestStateTransaction {
     uint64_t base_revision;
     const uint32_t* target_stream_ids;
     uint32_t entry_count;
-    uint32_t reserved0;
     const DcamRequestStateEntry* entries;
-    uint64_t reserved[5];
 } DcamRequestStateTransaction;
 
 typedef struct DcamCaptureEvent {
@@ -245,7 +233,6 @@ typedef struct DcamCaptureEvent {
     uint64_t capture_id;
     uint64_t frame_id;
     DcamStringView message;
-    uint64_t reserved[5];
 } DcamCaptureEvent;
 
 typedef struct DcamRequestStateResult {
@@ -254,10 +241,8 @@ typedef struct DcamRequestStateResult {
     uint32_t applied;
     int32_t error_code;
     uint32_t key_id;
-    uint32_t reserved0;
     DcamStringView key_name;
     DcamStringView message;
-    uint64_t reserved[4];
 } DcamRequestStateResult;
 
 typedef struct DcamHostApi {
@@ -294,7 +279,6 @@ typedef struct DcamHostApi {
     DcamStatus (*request_burst_capture)(void* context, uint32_t source,
                                         uint64_t zsl_frame_id,
                                         uint32_t frame_count);
-    uint64_t reserved[6];
 
     /*
      * Opens an app-owned artifact file. The suggested name is advisory and the
@@ -347,7 +331,6 @@ typedef struct DcamNodeApi {
     DcamStatus (*on_request_state_result)(
             DcamNodeHandle handle, const DcamRequestStateResult* result);
     void (*destroy)(DcamNodeHandle handle);
-    uint64_t reserved[9];
 } DcamNodeApi;
 
 typedef DcamStatus (*DcamNodeGetApiFn)(uint32_t requested_abi_major,
