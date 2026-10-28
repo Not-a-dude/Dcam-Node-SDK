@@ -23,6 +23,7 @@ extern "C" {
 #define DCAM_NODE_ENTRYPOINT "dcam_node_get_api"
 #define DCAM_PREVIEW_SURFACE ((DcamSurfaceHandle)1u)
 #define DCAM_FRAME_FLAG_PREVIEW_PRESENTED (1u << 0)
+#define DCAM_FRAME_FLAG_BUFFER_WRITABLE   (1u << 1)
 
 #define DCAM_STRUCT_HEADER uint32_t struct_size
 
@@ -119,6 +120,14 @@ typedef struct DcamBytesView {
     uint32_t size;
 } DcamBytesView;
 
+typedef struct DcamFrameAttachment {
+    DCAM_STRUCT_HEADER;
+    DcamStringView key;
+    DcamStringView content_tag;
+    AHardwareBuffer* buffer;
+    DcamBytesView data;
+} DcamFrameAttachment;
+
 typedef struct DcamBufferDesc {
     DCAM_STRUCT_HEADER;
     uint32_t width;
@@ -172,6 +181,9 @@ typedef struct DcamFrame {
     DcamStringView parameters_json;
     /* 0 for a camera-source frame, otherwise the receiving node input port. */
     uint32_t input_port_id;
+    DcamStringView content_tag;
+    uint32_t attachment_count;
+    const DcamFrameAttachment* attachments;
 } DcamFrame;
 
 /* release_fence_fd ownership transfers from the node to the host. */
